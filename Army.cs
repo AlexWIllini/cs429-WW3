@@ -4,5 +4,5 @@ public class Army
 
     public int Range { get; }
 
-    public ushort Health { get; set; }
+    public int Health { get; set; }
 }
