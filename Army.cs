@@ -6,9 +6,9 @@ public class Army
 
     public int Health { get; set; }
 
-    public Army(Pos Position, int Health)
+    public Army(Pos position, int health)
     {
-        this.Position = Position;
-        this.Health = Health;
+        this.Position = position;
+        this.Health = health;
     }
 }
