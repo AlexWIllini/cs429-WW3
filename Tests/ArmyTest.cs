@@ -11,4 +11,14 @@ public class ArmyTest
         Assert.AreEqual(0, a.Position.X);
         Assert.AreEqual(3, a.Position.Y);
     }
+
+    [TestMethod]
+    public void TestUpdateResources()
+    {
+        var army = new Army(new Pos(0, 0), 0);
+        var province = new Province();
+        province.Tick();
+        army.UpdateResources(province);
+        Assert.AreEqual(10, army.Health);
+    }
 }
