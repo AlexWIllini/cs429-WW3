@@ -1,9 +1,11 @@
 public class City
 {
+    public const float SIZE = 0.7f;
+
     public City(string name, int points)
     {
-        this.Name = name;
-        this.Points = points;
+        Name = name;
+        Points = points;
     }
 
     public string Name { get; }

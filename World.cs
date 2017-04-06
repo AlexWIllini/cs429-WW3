@@ -1,11 +1,10 @@
-using System;
 using System.IO;
 
 public class World
 {
-    public const int WIDTH = 512;
+    public const int WIDTH = 100;
 
-    public const int HEIGHT = 256;
+    public const int HEIGHT = 50;
 
     public const float MAXLAT = 90f;
 
@@ -26,7 +25,7 @@ public class World
         {
             for (int j = 0; j < HEIGHT; j++)
             {
-                this.provinceGrid[i, j] = new Province();
+                provinceGrid[i, j] = new Province();
             }
         }
 
@@ -35,14 +34,25 @@ public class World
             while (!file.EndOfStream)
             {
                 string cityString = file.ReadLine();
-                this.AddCity(cityString);
+                AddCity(cityString);
             }
         }
     }
 
     public Province GetProvinceAt(Pos pos)
     {
-        return this.provinceGrid[pos.X, pos.Y];
+        return provinceGrid[pos.X, pos.Y];
+    }
+
+    public void Tick()
+    {
+        for (int i = 0; i < WIDTH; ++i)
+        {
+            for (int j = 0; j < HEIGHT; ++j)
+            {
+                provinceGrid[i, j].Tick();
+            }
+        }
     }
 
     private void AddCity(string cityString)
@@ -63,8 +73,8 @@ public class World
         float latitude = float.Parse(cityData[LAT_IDX]);
         float longitude = float.Parse(cityData[LONG_IDX]);
 
-        Pos pos = this.ConvertGridCoords(latitude, longitude);
-        this.AddCity(city, pos);
+        Pos pos = ConvertGridCoords(latitude, longitude);
+        AddCity(city, pos);
     }
 
     private Pos ConvertGridCoords(float latitude, float longitude)
@@ -77,6 +87,6 @@ public class World
 
     private void AddCity(City city, Pos pos)
     {
-        this.provinceGrid[pos.X, pos.Y].City = city;
+        provinceGrid[pos.X, pos.Y].City = city;
     }
 }

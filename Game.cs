@@ -3,51 +3,45 @@ using System.Collections.Generic;
 
 public class Game
 {
-    private readonly World world;
-    private int currentPlayer;
-    private List<Player> players;
-
     public Game()
     {
-        // initialize world
-        this.world = new World("maps.csv");
+        // initialize World
+        World = new World("maps.csv");
 
         // set up players list. for now, just add two players.
-        this.players = new List<Player>();
-        this.players.Add(new Player());
-        this.players.Add(new Player());
-        this.currentPlayer = 0;
+        Players = new List<Player>();
+        Players.Add(new Player(new Color(1.0f, 0.0f, 0.0f)));
+        Players.Add(new Player(new Color(0.0f, 0.0f, 1.0f)));
+        Players[0].AddArmy(new Army(new Pos(0, 0), 10));
+        Players[1].AddArmy(new Army(new Pos(1, 1), 10));
+        CurrentPlayerIndex = 0;
     }
 
-    public static void Main(string[] args)
+    public World World { get; private set; }
+
+    public List<Player> Players { get; private set; }
+
+    public Player CurrentPlayer
     {
-        new Game().Launch();
+        get
+        {
+            return Players[CurrentPlayerIndex];
+        }
     }
 
-    public Player GetCurrentPlayer()
-    {
-        return this.players[this.currentPlayer];
-    }
+    public int CurrentPlayerIndex { get; private set; }
 
     public void AdvancePlayer()
     {
-        this.currentPlayer = (this.currentPlayer + 1) % this.players.Count;
+        CurrentPlayerIndex = (CurrentPlayerIndex + 1) % Players.Count;
     }
 
-    public void Launch()
+    public void Tick()
     {
-        Console.WriteLine("Welcome to WW3 - type 'quit' to exit.");
-        string last;
-        while ((last = Console.ReadLine()) != "quit")
+        World.Tick();
+        foreach (var player in Players)
         {
-            if (last == "print")
-            {
-                this.Print();
-            }
-            else
-            {
-                Console.WriteLine("Command not recognized.");
-            }
+            player.Tick();
         }
     }
 
@@ -57,14 +51,24 @@ public class Game
         {
             for (int y = 0; y < World.HEIGHT; y++)
             {
-                Province p = this.world.GetProvinceAt(new Pos(x, y));
-                if (p.City != null)
+                Province p = World.GetProvinceAt(new Pos(x, y));
+                bool printed = false;
+                foreach (var player in Players)
                 {
-                    Console.Write(p.City.Name.Substring(0, 1));
+                    var armies = player.ArmyList;
+                    for (int j = 0; j < armies.Count; ++j)
+                    {
+                        if (armies[j].Position.Equals(new Pos(x, y)))
+                        {
+                            Console.Write(j);
+                            printed = true;
+                        }
+                    }
                 }
-                else
+
+                if (!printed)
                 {
-                    Console.Write("*");
+                    Console.Write(p.City?.Name.Substring(0, 1) ?? "*");
                 }
             }
 
