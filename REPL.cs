@@ -213,6 +213,7 @@ public class REPL
 
             var input = Console.ReadLine();
             var match = Command.Match(input);
+
             if (match.Success)
             {
                 if (match.Value == "help")
